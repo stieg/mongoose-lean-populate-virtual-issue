@@ -59,13 +59,23 @@ mongoose.connect(process.env.DBURL || "mongodb://localhost/test", {
   usr1.bffId = usr0._id;
   return Promise.all([usr0.save(), usr1.save()]);
 }).then(() => {
-  return User.findOne(userInfo[1]).populate("bff").lean({virtuals: true}).exec();
+  return User.findOne(userInfo[1]).populate("bff").lean(true).exec();
 }).then((user1) => {
+  console.log("Standard lean and populate test");
   assert(user1, 'User 1 is expected to be defined');
   assert(user1.bff, 'User 1\'s BFF should be populated');
-  assert(user1.bff._id === user1.bffId, 'User 1\'s BFF should be populated with user 0');
+  assert(user1.bff._id.equals(user1.bffId), 'User 1\'s BFF should be populated with user 0');
+  console.log("Test passed");
+}).then(() => {
+  return User.findOne(userInfo[1]).populate("bff").lean({virtuals: true}).exec();
+}).then((user1) => {
+  console.log("Mongoose-lean-virtuals lean and populate test");
+  assert(user1, 'User 1 is expected to be defined');
+  assert(user1.bff, 'User 1\'s BFF should be populated');
+  assert(user1.bff._id.equals(user1.bffId), 'User 1\'s BFF should be populated with user 0');
+  console.log("Test passed");
 }).catch((err) => {
-  console.error('There was an error: ' + (err.stack || err));
+  console.error('Test failed: ' + (err.stack || err));
 }).finally(() => {
   return mongoose.disconnect();
 });

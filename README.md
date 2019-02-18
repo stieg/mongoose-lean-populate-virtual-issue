@@ -5,8 +5,8 @@ Demonstrates the failure of populate virtual fields.
 * `npm install`
 * `npm start`
 
-== Expectation
+## Expectation
 The BFF field should be populated with a full user.
 
-== Reality
+## Reality
 The BFF field is `null`.
